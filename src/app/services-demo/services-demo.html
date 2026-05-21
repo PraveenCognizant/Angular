@@ -1,0 +1,82 @@
+<!-- SERVICES & DEPENDENCY INJECTION DEMO -->
+<div style="max-width:700px; margin:0 auto; font-family:sans-serif;">
+  <h2 style="color:#1a1a2e;">Services & Dependency Injection</h2>
+
+  <!-- Interview key points -->
+  <div style="background:#e8eaf6; padding:14px 16px; border-left:4px solid #3949ab; border-radius:4px; margin-bottom:20px;">
+    <strong>Interview Key Points:</strong>
+    <ul style="margin:8px 0 0; padding-left:20px; line-height:1.8;">
+      <li><code>@Injectable(&#123; providedIn: 'root' &#125;)</code> = one instance for the whole app (singleton)</li>
+      <li>Services are injected via <code>inject(ServiceName)</code> or constructor</li>
+      <li>Services are NOT in the component's <code>imports: []</code> array</li>
+      <li>Services keep business logic separate from UI components</li>
+    </ul>
+  </div>
+
+  <!-- Stats — from the service's computed() signals -->
+  <div style="display:flex; gap:12px; margin-bottom:20px;">
+    <div style="flex:1; background:#e8f5e9; padding:14px; border-radius:8px; text-align:center;">
+      <!--
+        completedCount() — parentheses because it's a Signal (function call to read)
+      -->
+      <div style="font-size:2.5rem; font-weight:bold; color:#388e3c;">{{ completedCount() }}</div>
+      <div style="color:#555; font-size:0.9rem;">Completed</div>
+    </div>
+    <div style="flex:1; background:#e3f2fd; padding:14px; border-radius:8px; text-align:center;">
+      <div style="font-size:2.5rem; font-weight:bold; color:#1565c0;">{{ totalCount() }}</div>
+      <div style="color:#555; font-size:0.9rem;">Total</div>
+    </div>
+    <div style="flex:1; background:#fff3e0; padding:14px; border-radius:8px; text-align:center;">
+      <div style="font-size:2.5rem; font-weight:bold; color:#e65100;">{{ totalCount() - completedCount() }}</div>
+      <div style="color:#555; font-size:0.9rem;">Remaining</div>
+    </div>
+  </div>
+
+  <!-- Add todo form -->
+  <div style="display:flex; gap:8px; margin-bottom:16px;">
+    <input [(ngModel)]="newTodoText"
+           (keyup.enter)="addTodo()"
+           placeholder="Add a new todo... (press Enter)"
+           style="flex:1; padding:10px 14px; border:2px solid #c5cae9;
+                  border-radius:8px; font-size:1rem; outline:none;">
+    <button (click)="addTodo()"
+            style="padding:10px 20px; background:#3949ab; color:white;
+                   border:none; border-radius:8px; cursor:pointer; font-size:0.95rem;">
+      Add
+    </button>
+  </div>
+
+  <!-- Todo list — data comes from the service via todos() signal -->
+  <ul style="list-style:none; padding:0; margin:0;">
+    @for (todo of todos(); track todo.id) {
+      <li style="display:flex; align-items:center; gap:12px;
+                 padding:12px 14px; margin:6px 0;
+                 background:white; border:1px solid #e0e0e0;
+                 border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+
+        <!-- Checkbox toggles done/not done via service method -->
+        <input type="checkbox"
+               [checked]="todo.done"
+               (change)="toggleTodo(todo.id)"
+               style="width:18px; height:18px; cursor:pointer; accent-color:#3949ab;">
+
+        <!-- Cross out text when done via property binding on text-decoration -->
+        <span [style.text-decoration]="todo.done ? 'line-through' : 'none'"
+              [style.color]="todo.done ? '#9e9e9e' : '#212121'"
+              style="flex:1; font-size:0.95rem;">
+          {{ todo.text }}
+        </span>
+
+        <button (click)="deleteTodo(todo.id)"
+                style="padding:4px 12px; background:#e53935; color:white;
+                       border:none; border-radius:4px; cursor:pointer; font-size:0.85rem;">
+          Delete
+        </button>
+      </li>
+    } @empty {
+      <li style="text-align:center; color:#9e9e9e; padding:24px; font-style:italic;">
+        No todos! Add one above.
+      </li>
+    }
+  </ul>
+</div>

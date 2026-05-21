@@ -1,0 +1,117 @@
+<!-- BINDINGS DEMO — most commonly asked in interviews -->
+<div style="max-width:820px; margin:0 auto; font-family:sans-serif;">
+  <h2 style="color:#1a1a2e;">Data Binding (Most Asked in Interviews!)</h2>
+
+  <!-- ─── 1. INTERPOLATION ──────────────────────────────────────── -->
+  <section style="background:#e3f2fd; padding:16px; border-radius:8px; margin:16px 0;">
+    <h3 style="margin-top:0;">1. Interpolation — <code>{{ '{{' }} expression {{ '}}' }}</code></h3>
+    <p>Evaluates TypeScript expressions and renders them as text. <strong>One-way</strong>: class → template.</p>
+
+    <!-- {{ userName }} reads the 'userName' property from the TS class -->
+    <p>Variable: <strong>{{ userName }}</strong></p>
+
+    <!-- You can do math or method calls inside {{ }} -->
+    <p>Math: <strong>{{ 10 + 5 * 2 }}</strong></p>
+    <p>Method call: <strong>{{ userName.toUpperCase() }}</strong></p>
+    <p>Ternary: <strong>{{ clickCount > 0 ? 'Clicked!' : 'Not yet clicked' }}</strong></p>
+  </section>
+
+  <!-- ─── 2. PROPERTY BINDING ───────────────────────────────────── -->
+  <section style="background:#f3e5f5; padding:16px; border-radius:8px; margin:16px 0;">
+    <h3 style="margin-top:0;">2. Property Binding — <code>[property]="expression"</code></h3>
+    <p>Sets an HTML element's <em>property</em> dynamically. <strong>One-way</strong>: class → template.</p>
+    <p>Square brackets <code>[ ]</code> tell Angular: "evaluate the right side as TypeScript".</p>
+
+    <!--
+      [disabled] binds isButtonDisabled to the button's disabled property.
+      Without brackets: disabled="isButtonDisabled" would pass a literal string.
+      With brackets:    [disabled]="isButtonDisabled" passes the boolean value.
+    -->
+    <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+      <button [disabled]="isButtonDisabled"
+              style="padding:8px 16px; background:#7b1fa2; color:white; border:none; border-radius:4px; cursor:pointer; opacity: var(--disabled-opacity, 1);">
+        I am {{ isButtonDisabled ? 'Disabled' : 'Enabled' }}
+      </button>
+      <button (click)="toggleDisabled()"
+              style="padding:8px 16px; background:#555; color:white; border:none; border-radius:4px; cursor:pointer;">
+        Toggle
+      </button>
+    </div>
+
+    <!-- [src] binds the image source URL property -->
+    <p>[src] example:</p>
+    <img [src]="imageUrl" [alt]="userName + ' logo'" width="60"
+         style="border:1px solid #e0e0e0; border-radius:6px; padding:4px; background:white;">
+
+    <!-- [style.background] binds an inline CSS style -->
+    <div [style.background]="highlightColor"
+         style="padding:10px; margin-top:10px; border-radius:4px;">
+      Background set via [style.background]="{{ highlightColor }}"
+    </div>
+  </section>
+
+  <!-- ─── 3. EVENT BINDING ──────────────────────────────────────── -->
+  <section style="background:#e8f5e9; padding:16px; border-radius:8px; margin:16px 0;">
+    <h3 style="margin-top:0;">3. Event Binding — <code>(event)="handler()"</code></h3>
+    <p>Listens to DOM events and calls TypeScript methods. <strong>One-way</strong>: template → class.</p>
+    <p>Parentheses <code>( )</code> tell Angular: "call the method when this event fires".</p>
+    <p>Use <code>$event</code> to pass the native event object to the handler.</p>
+
+    <!-- (click) listens for mouse clicks -->
+    <button (click)="onButtonClick()"
+            style="padding:10px 20px; background:#388e3c; color:white; border:none; border-radius:4px; cursor:pointer;">
+      Clicked {{ clickCount }} times
+    </button>
+
+    <!-- (keyup) listens for keyboard key releases -->
+    <div style="margin-top:12px;">
+      <input (keyup)="onKeyPress($event)" placeholder="Press any key..."
+             style="padding:8px; border:2px solid #a5d6a7; border-radius:4px; font-size:1rem;">
+      <span style="margin-left:10px; color:#555;">Last key: <strong>{{ lastKey }}</strong></span>
+    </div>
+
+    <!-- (mousemove) + $event to get coordinates -->
+    <div (mousemove)="onMouseMove($event)"
+         style="margin-top:12px; padding:24px; background:#c8e6c9; border-radius:6px;
+                text-align:center; cursor:crosshair; user-select:none;">
+      Move your mouse here!<br>
+      X: <strong>{{ mouseX }}</strong> &nbsp; Y: <strong>{{ mouseY }}</strong>
+    </div>
+  </section>
+
+  <!-- ─── 4. TWO-WAY BINDING ────────────────────────────────────── -->
+  <section style="background:#fff3e0; padding:16px; border-radius:8px; margin:16px 0;">
+    <h3 style="margin-top:0;">4. Two-Way Binding — <code>[(ngModel)]="property"</code></h3>
+    <p>Data flows in <strong>both</strong> directions: class ↔ template simultaneously.</p>
+    <p><code>[(ngModel)]</code> is a shorthand for <code>[ngModel]="val" (ngModelChange)="val=$event"</code></p>
+    <p>Requires <code>FormsModule</code> in imports array!</p>
+
+    <!--
+      [(ngModel)]="liveText" keeps 'liveText' in sync with the input.
+      When you type → liveText updates.
+      If liveText changes in code → input updates.
+    -->
+    <input [(ngModel)]="liveText"
+           style="padding:10px; width:100%; border:2px solid #ffb300; border-radius:6px;
+                  font-size:1rem; box-sizing:border-box;">
+
+    <!-- This paragraph instantly reflects what you type -->
+    <p style="margin-top:10px;">Live preview: <strong style="color:#e65100;">{{ liveText }}</strong></p>
+  </section>
+
+  <!-- ─── INTERVIEW CHEAT SHEET ────────────────────────────────── -->
+  <section style="background:#fce4ec; padding:16px; border-radius:8px; margin:16px 0; border-left:4px solid #c62828;">
+    <h3 style="margin-top:0; color:#c62828;">Binding Cheat Sheet</h3>
+    <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+      <tr style="background:#c62828; color:white;">
+        <th style="padding:8px; text-align:left;">Type</th>
+        <th style="padding:8px; text-align:left;">Syntax</th>
+        <th style="padding:8px; text-align:left;">Direction</th>
+      </tr>
+      <tr style="border-bottom:1px solid #eee;"><td style="padding:8px;">Interpolation</td><td style="padding:8px; font-family:monospace;">{{ '{{' }} value {{ '}}' }}</td><td style="padding:8px;">Class → Template</td></tr>
+      <tr style="background:#fafafa; border-bottom:1px solid #eee;"><td style="padding:8px;">Property</td><td style="padding:8px; font-family:monospace;">[property]="expr"</td><td style="padding:8px;">Class → Template</td></tr>
+      <tr style="border-bottom:1px solid #eee;"><td style="padding:8px;">Event</td><td style="padding:8px; font-family:monospace;">(event)="method()"</td><td style="padding:8px;">Template → Class</td></tr>
+      <tr style="background:#fafafa;"><td style="padding:8px;">Two-way</td><td style="padding:8px; font-family:monospace;">[(ngModel)]="prop"</td><td style="padding:8px;">Both directions</td></tr>
+    </table>
+  </section>
+</div>

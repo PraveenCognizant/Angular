@@ -1,0 +1,16 @@
+<div>
+    <ul>
+        @for(item of name;track $index){
+            <li>{{item}}</li>
+        }
+    </ul>
+
+
+</div>
+<div>
+    <ol>
+        <div *ngFor="let item of name">
+            <li>{{item}}</li>
+        </div>
+    </ol>
+</div>

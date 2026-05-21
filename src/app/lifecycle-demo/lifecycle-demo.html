@@ -1,0 +1,107 @@
+<!-- LIFECYCLE HOOKS DEMO -->
+<div style="max-width:820px; margin:0 auto; font-family:sans-serif;">
+  <h2 style="color:#1a1a2e;">Lifecycle Hooks</h2>
+  <p style="color:#555; margin-top:0;">Open browser DevTools console to see detailed logs.</p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+
+    <!-- Left panel: hook log list -->
+    <section>
+      <h3 style="margin-top:0;">Hooks fired on this component</h3>
+      <p style="font-size:0.82rem; color:#555; margin-top:0;">These logged automatically when the page loaded.</p>
+
+      <ul style="list-style:none; padding:0; margin:0;">
+        @for (log of logs(); track log) {
+          <li style="padding:8px 12px; margin:5px 0; background:#f3e5f5;
+                     border-left:4px solid #7b1fa2; border-radius:4px;
+                     font-size:0.82rem; font-family:monospace; line-height:1.4;">
+            {{ log }}
+          </li>
+        }
+      </ul>
+    </section>
+
+    <!-- Right panel: interact with child to trigger hooks -->
+    <section>
+      <h3 style="margin-top:0;">Trigger hooks on child</h3>
+
+      <!-- Sending message → triggers ngOnChanges in child -->
+      <p style="font-size:0.85rem; color:#555;">
+        Change the message below — it triggers <code>ngOnChanges</code> in the child.
+      </p>
+      <div style="display:flex; gap:8px; margin-bottom:14px;">
+        <input [(ngModel)]="inputText"
+               placeholder="Type a message..."
+               style="flex:1; padding:8px 10px; border:2px solid #ce93d8;
+                      border-radius:6px; font-size:0.9rem; outline:none;">
+        <button (click)="sendMessage()"
+                style="padding:8px 16px; background:#7b1fa2; color:white;
+                       border:none; border-radius:6px; cursor:pointer;">
+          Send
+        </button>
+      </div>
+
+      <!-- Toggle creates/destroys the child — demos ngOnInit & ngOnDestroy -->
+      <p style="font-size:0.85rem; color:#555;">
+        Destroy/create child — triggers <code>ngOnDestroy</code> then <code>ngOnInit</code>.
+      </p>
+      <button (click)="toggleChild()"
+              style="padding:10px 18px; border:none; border-radius:6px; cursor:pointer; font-size:0.9rem;"
+              [style.background]="showChild() ? '#e53935' : '#388e3c'"
+              [style.color]="'white'">
+        {{ showChild() ? 'Destroy Child (triggers ngOnDestroy)' : 'Create Child (triggers ngOnInit)' }}
+      </button>
+
+      <!--
+        @if with showChild() signal:
+        When false → child is REMOVED from DOM → ngOnDestroy fires
+        When true  → child is CREATED fresh → constructor + ngOnInit fires
+      -->
+      @if (showChild()) {
+        <app-lifecycle-child [message]="messageForChild()" />
+      } @else {
+        <div style="margin-top:10px; padding:12px; background:#ffebee; border-radius:8px; color:#c62828; font-size:0.88rem; font-style:italic;">
+          Child component is destroyed. Click button above to recreate it.
+        </div>
+      }
+    </section>
+
+  </div>
+
+  <!-- Cheat sheet table -->
+  <section style="background:#f3e5f5; padding:16px; border-radius:8px; margin-top:24px;">
+    <h3 style="margin-top:0; color:#6a1b9a;">Lifecycle Cheat Sheet (Interview Quick Reference)</h3>
+    <table style="width:100%; border-collapse:collapse; font-size:0.87rem;">
+      <tr style="background:#6a1b9a; color:white;">
+        <th style="padding:8px 10px; text-align:left;">Hook</th>
+        <th style="padding:8px 10px; text-align:left;">When it fires</th>
+        <th style="padding:8px 10px; text-align:left;">Best used for</th>
+      </tr>
+      <tr style="border-bottom:1px solid #e1bee7;">
+        <td style="padding:8px 10px; font-family:monospace;">constructor()</td>
+        <td style="padding:8px 10px;">Class is instantiated</td>
+        <td style="padding:8px 10px;">Dependency injection only</td>
+      </tr>
+      <tr style="background:#fafafa; border-bottom:1px solid #e1bee7;">
+        <td style="padding:8px 10px; font-family:monospace;">ngOnChanges()</td>
+        <td style="padding:8px 10px;">@Input() value changes</td>
+        <td style="padding:8px 10px;">React to parent input updates</td>
+      </tr>
+      <tr style="border-bottom:1px solid #e1bee7;">
+        <td style="padding:8px 10px; font-family:monospace;">ngOnInit()</td>
+        <td style="padding:8px 10px;">Once after first render</td>
+        <td style="padding:8px 10px;"><strong>API calls, data loading ⭐</strong></td>
+      </tr>
+      <tr style="background:#fafafa; border-bottom:1px solid #e1bee7;">
+        <td style="padding:8px 10px; font-family:monospace;">ngAfterViewInit()</td>
+        <td style="padding:8px 10px;">Template + children rendered</td>
+        <td style="padding:8px 10px;">@ViewChild DOM access</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 10px; font-family:monospace;">ngOnDestroy()</td>
+        <td style="padding:8px 10px;">Before component removal</td>
+        <td style="padding:8px 10px;"><strong>Unsubscribe, cleanup ⭐</strong></td>
+      </tr>
+    </table>
+  </section>
+</div>

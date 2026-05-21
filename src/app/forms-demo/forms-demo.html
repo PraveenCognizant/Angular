@@ -1,0 +1,162 @@
+<!-- FORMS DEMO -->
+<div style="max-width:860px; margin:0 auto; font-family:sans-serif;">
+  <h2 style="color:#1a1a2e;">Forms</h2>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+
+    <!-- ═══ TEMPLATE-DRIVEN FORM ════════════════════════════════ -->
+    <section style="background:#e8f5e9; padding:18px; border-radius:10px;">
+      <h3 style="margin-top:0; color:#2e7d32;">1. Template-Driven Form</h3>
+      <p style="font-size:0.85rem; color:#555; margin-top:0;">Logic in HTML. Import: <code>FormsModule</code></p>
+
+      <!--
+        #myForm="ngForm"  → creates a reference variable linked to Angular's NgForm
+        (ngSubmit)        → fires when form is submitted (replaces native submit)
+      -->
+      <form #myForm="ngForm" (ngSubmit)="onTemplateSubmit(myForm)">
+
+        <div style="margin-bottom:14px;">
+          <label style="display:block; font-weight:bold; margin-bottom:4px;">Username</label>
+          <!--
+            [(ngModel)]  → two-way binds to templateData.username
+            name="..."   → REQUIRED for template-driven forms (NgForm tracks fields by name)
+            #username="ngModel" → template reference to access validation state
+            required, minlength  → validation attributes Angular reads
+          -->
+          <input [(ngModel)]="templateData.username"
+                 name="username"
+                 #username="ngModel"
+                 required
+                 minlength="3"
+                 style="width:100%; padding:8px; border:2px solid #a5d6a7; border-radius:6px; box-sizing:border-box;">
+
+          <!-- Show error only after field has been touched (user focused and left) -->
+          @if (username.invalid && username.touched) {
+            <small style="color:#c62828;">Username required (min 3 chars)</small>
+          }
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <label style="display:block; font-weight:bold; margin-bottom:4px;">Email</label>
+          <input [(ngModel)]="templateData.email"
+                 name="email"
+                 #emailRef="ngModel"
+                 required
+                 email
+                 type="email"
+                 style="width:100%; padding:8px; border:2px solid #a5d6a7; border-radius:6px; box-sizing:border-box;">
+          @if (emailRef.invalid && emailRef.touched) {
+            <small style="color:#c62828;">Valid email is required</small>
+          }
+        </div>
+
+        <!--
+          [disabled]="myForm.invalid" → disables button when form has errors
+          myForm.status can be: VALID | INVALID | PENDING
+        -->
+        <button type="submit"
+                [disabled]="myForm.invalid"
+                style="width:100%; padding:10px; background:#388e3c; color:white;
+                       border:none; border-radius:6px; cursor:pointer; font-size:1rem;">
+          Submit
+        </button>
+
+        <p style="font-size:0.8rem; margin-top:8px; color:#555;">
+          Form status: <strong>{{ myForm.status }}</strong>
+        </p>
+
+        @if (templateResult) {
+          <pre style="background:#c8e6c9; padding:10px; border-radius:6px; font-size:0.82rem; margin-top:8px;">{{ templateResult }}</pre>
+        }
+      </form>
+    </section>
+
+    <!-- ═══ REACTIVE FORM ════════════════════════════════════════ -->
+    <section style="background:#e3f2fd; padding:18px; border-radius:10px;">
+      <h3 style="margin-top:0; color:#1565c0;">2. Reactive Form</h3>
+      <p style="font-size:0.85rem; color:#555; margin-top:0;">Logic in TypeScript. Import: <code>ReactiveFormsModule</code></p>
+
+      <!--
+        [formGroup]="reactiveForm" → links this form tag to our FormGroup in TS
+        (ngSubmit) → same as template-driven
+      -->
+      <form [formGroup]="reactiveForm" (ngSubmit)="onReactiveSubmit()">
+
+        <div style="margin-bottom:14px;">
+          <label style="display:block; font-weight:bold; margin-bottom:4px;">Full Name</label>
+          <!--
+            formControlName="fullName" → links this input to the 'fullName' FormControl
+            No [(ngModel)] needed here — the FormGroup handles syncing
+          -->
+          <input formControlName="fullName"
+                 style="width:100%; padding:8px; border:2px solid #90caf9; border-radius:6px; box-sizing:border-box;">
+
+          <!-- fullName is a getter in TS that returns the FormControl -->
+          @if (fullName.invalid && fullName.touched) {
+            @if (fullName.errors?.['required']) {
+              <small style="color:#c62828;">Full name is required</small>
+            } @else if (fullName.errors?.['minlength']) {
+              <small style="color:#c62828;">Minimum 3 characters required</small>
+            }
+          }
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <label style="display:block; font-weight:bold; margin-bottom:4px;">Email</label>
+          <input formControlName="email" type="email"
+                 style="width:100%; padding:8px; border:2px solid #90caf9; border-radius:6px; box-sizing:border-box;">
+          @if (email.invalid && email.touched) {
+            <small style="color:#c62828;">Valid email is required</small>
+          }
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <label style="display:block; font-weight:bold; margin-bottom:4px;">Password</label>
+          <input formControlName="password" type="password"
+                 style="width:100%; padding:8px; border:2px solid #90caf9; border-radius:6px; box-sizing:border-box;">
+          @if (password.invalid && password.touched) {
+            <small style="color:#c62828;">8+ chars, 1 uppercase letter, 1 number</small>
+          }
+        </div>
+
+        <p style="font-size:0.8rem; color:#555; margin:0 0 10px;">
+          Form status: <strong>{{ reactiveForm.status }}</strong>
+        </p>
+
+        <div style="display:flex; gap:8px;">
+          <button type="submit"
+                  style="flex:1; padding:10px; background:#1565c0; color:white;
+                         border:none; border-radius:6px; cursor:pointer; font-size:1rem;">
+            Submit
+          </button>
+          <button type="button" (click)="resetReactive()"
+                  style="padding:10px 16px; background:#757575; color:white;
+                         border:none; border-radius:6px; cursor:pointer;">
+            Reset
+          </button>
+        </div>
+
+        @if (reactiveResult) {
+          <pre style="background:#bbdefb; padding:10px; border-radius:6px; font-size:0.82rem; margin-top:10px;">{{ reactiveResult }}</pre>
+        }
+      </form>
+    </section>
+
+  </div>
+
+  <!-- Comparison table -->
+  <section style="background:#fce4ec; padding:16px; border-radius:8px; margin-top:20px; border-left:4px solid #c62828;">
+    <h3 style="margin-top:0; color:#c62828;">When to use which?</h3>
+    <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+      <tr style="background:#c62828; color:white;">
+        <th style="padding:8px; text-align:left;"></th>
+        <th style="padding:8px; text-align:left;">Template-Driven</th>
+        <th style="padding:8px; text-align:left;">Reactive</th>
+      </tr>
+      <tr style="border-bottom:1px solid #eee;"><td style="padding:8px; font-weight:bold;">Logic in</td><td style="padding:8px;">HTML template</td><td style="padding:8px;">TypeScript class</td></tr>
+      <tr style="background:#fafafa; border-bottom:1px solid #eee;"><td style="padding:8px; font-weight:bold;">Module</td><td style="padding:8px;">FormsModule</td><td style="padding:8px;">ReactiveFormsModule</td></tr>
+      <tr style="border-bottom:1px solid #eee;"><td style="padding:8px; font-weight:bold;">Testability</td><td style="padding:8px;">Harder</td><td style="padding:8px;">Easy (pure TS)</td></tr>
+      <tr style="background:#fafafa;"><td style="padding:8px; font-weight:bold;">Best for</td><td style="padding:8px;">Simple forms</td><td style="padding:8px;">Complex/dynamic forms</td></tr>
+    </table>
+  </section>
+</div>

@@ -1,0 +1,117 @@
+<!-- PIPES DEMO -->
+<div style="max-width:820px; margin:0 auto; font-family:sans-serif;">
+  <h2 style="color:#1a1a2e;">Pipes</h2>
+  <p style="color:#555;">Syntax: <code>{{ '{{' }} value | pipeName : argument {{ '}}' }}</code></p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+
+    <!-- ─── TEXT PIPES ─────────────────────────────────────────── -->
+    <section style="background:#f3e5f5; padding:16px; border-radius:8px;">
+      <h3 style="margin-top:0; color:#6a1b9a;">Text Pipes</h3>
+      <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+        <tr style="background:#6a1b9a; color:white;">
+          <th style="padding:6px 8px; text-align:left;">Pipe</th>
+          <th style="padding:6px 8px; text-align:left;">Result</th>
+        </tr>
+        <tr style="border-bottom:1px solid #e1bee7;">
+          <td style="padding:7px 8px; font-family:monospace; font-size:0.82rem;">| uppercase</td>
+          <!-- uppercase pipe converts string to UPPER CASE -->
+          <td style="padding:7px 8px;">{{ name | uppercase }}</td>
+        </tr>
+        <tr style="background:#fafafa; border-bottom:1px solid #e1bee7;">
+          <td style="padding:7px 8px; font-family:monospace; font-size:0.82rem;">| lowercase</td>
+          <td style="padding:7px 8px;">{{ name | lowercase }}</td>
+        </tr>
+        <tr style="border-bottom:1px solid #e1bee7;">
+          <td style="padding:7px 8px; font-family:monospace; font-size:0.82rem;">| titlecase</td>
+          <!-- titlecase capitalizes first letter of each word -->
+          <td style="padding:7px 8px;">{{ name | titlecase }}</td>
+        </tr>
+        <tr style="background:#fafafa; border-bottom:1px solid #e1bee7;">
+          <td style="padding:7px 8px; font-family:monospace; font-size:0.82rem;">| slice:0:7</td>
+          <!-- slice:start:end — extracts part of a string/array -->
+          <td style="padding:7px 8px;">{{ name | slice:0:7 }}</td>
+        </tr>
+        <tr style="border-bottom:1px solid #e1bee7;">
+          <td style="padding:7px 8px; font-family:monospace; font-size:0.82rem;">| reverse (custom)</td>
+          <!-- ReversePipe is our custom pipe from pipes/reverse.pipe.ts -->
+          <td style="padding:7px 8px;">{{ textToReverse | reverse }}</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- ─── NUMBER & DATE PIPES ────────────────────────────────── -->
+    <section style="background:#e8f5e9; padding:16px; border-radius:8px;">
+      <h3 style="margin-top:0; color:#2e7d32;">Number & Date Pipes</h3>
+      <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+        <tr style="background:#2e7d32; color:white;">
+          <th style="padding:6px 8px; text-align:left;">Pipe</th>
+          <th style="padding:6px 8px; text-align:left;">Result</th>
+        </tr>
+        <tr style="border-bottom:1px solid #c8e6c9;">
+          <td style="padding:7px 8px; font-family:monospace; font-size:0.82rem;">| currency</td>
+          <!-- currency defaults to USD -->
+          <td style="padding:7px 8px;">{{ price | currency }}</td>
+        </tr>
+        <tr style="background:#fafafa; border-bottom:1px solid #c8e6c9;">
+          <td style="padding:7px 8px; font-family:monospace; font-size:0.82rem;">| currency:'INR'</td>
+          <td style="padding:7px 8px;">{{ price | currency:'INR' }}</td>
+        </tr>
+        <tr style="border-bottom:1px solid #c8e6c9;">
+          <td style="padding:7px 8px; font-family:monospace; font-size:0.82rem;">| number:'1.2-4'</td>
+          <!-- number:'minInt.minFrac-maxFrac' -->
+          <td style="padding:7px 8px;">{{ pi | number:'1.2-4' }}</td>
+        </tr>
+        <tr style="background:#fafafa; border-bottom:1px solid #c8e6c9;">
+          <td style="padding:7px 8px; font-family:monospace; font-size:0.82rem;">| percent</td>
+          <td style="padding:7px 8px;">{{ ratio | percent }}</td>
+        </tr>
+        <tr style="border-bottom:1px solid #c8e6c9;">
+          <td style="padding:7px 8px; font-family:monospace; font-size:0.82rem;">| date:'short'</td>
+          <!-- date pipe formats Date objects -->
+          <td style="padding:7px 8px;">{{ today | date:'short' }}</td>
+        </tr>
+        <tr style="background:#fafafa;">
+          <td style="padding:7px 8px; font-family:monospace; font-size:0.82rem;">| date:'dd/MM/yyyy'</td>
+          <td style="padding:7px 8px;">{{ today | date:'dd/MM/yyyy' }}</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- ─── JSON PIPE ──────────────────────────────────────────── -->
+    <section style="background:#e3f2fd; padding:16px; border-radius:8px;">
+      <h3 style="margin-top:0; color:#1565c0;">JSON Pipe (great for debugging!)</h3>
+      <p style="font-size:0.85rem; color:#555;">Converts any object to formatted JSON string.</p>
+      <!-- json pipe is incredibly useful for debugging in dev -->
+      <pre style="background:#1a1a2e; color:#80cbc4; padding:12px; border-radius:6px;
+                  font-size:0.8rem; overflow-x:auto; margin:0;">{{ person | json }}</pre>
+    </section>
+
+    <!-- ─── CHAINING PIPES ─────────────────────────────────────── -->
+    <section style="background:#fff3e0; padding:16px; border-radius:8px;">
+      <h3 style="margin-top:0; color:#e65100;">Chaining Pipes</h3>
+      <p style="font-size:0.85rem; color:#555;">Pipes can be chained — the output of one becomes input of the next.</p>
+
+      <!-- First uppercase converts to "ANGULAR FRAMEWORK"
+           Then reverse reverses it to "KROWEMARF RALUGNA" -->
+      <p>
+        <code style="font-size:0.82rem;">name | uppercase | reverse</code><br>
+        → <strong>{{ name | uppercase | reverse }}</strong>
+      </p>
+
+      <p>
+        <code style="font-size:0.82rem;">today | date:'fullDate' | uppercase</code><br>
+        → <strong style="font-size:0.9rem;">{{ today | date:'fullDate' | uppercase }}</strong>
+      </p>
+
+      <!-- Custom pipe — try editing 'customText' in TS -->
+      <div style="margin-top:10px;">
+        <label style="font-size:0.85rem; font-weight:bold;">Try custom reverse pipe:</label><br>
+        <input [(ngModel)]="customText"
+               style="padding:6px; margin-top:4px; border:2px solid #ffb300; border-radius:4px; width:100%; box-sizing:border-box;">
+        <p>Reversed: <strong>{{ customText | reverse }}</strong></p>
+      </div>
+    </section>
+
+  </div>
+</div>
